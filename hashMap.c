@@ -7,6 +7,7 @@
 
 
 /*the first hashing function you can use*/
+/* RETURNS THE SUM OF THE DECIMAL ASCII VALUES OF EACH INDIVIDUAL CHAR OF THE CHAR LINKED LIST ARGUMENT */
 int stringHash1(char * str)
 {
 	int i;
@@ -17,6 +18,7 @@ int stringHash1(char * str)
 }
 
 /*the second hashing function you can use*/
+/* RETURNS THE SUM OF ((index + 1) * ASCII decimalValue at char index i) OF EACH INDIVIDUAL CHAR OF THE CHAR LINKED LIST ARGUMENT*/
 int stringHash2(char * str)
 {
 	int i;
