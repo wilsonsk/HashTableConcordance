@@ -92,6 +92,32 @@ Resizes the hash table to be the size newTableSize
 void _setTableSize(struct hashMap * ht, int newTableSize)
 {
 	/*write this*/			
+	assert(ht != 0);
+	ht->tableSize *= 2;
+	hashLink** newTable = (hashMap**)malloc(ht->tableSize * sizeof(hashLink*));
+	for(int i = 0; i < ht->tableSize; i++){ newTable[i] = NULL; }
+	for(int i = 0; i < ht->count; i++){
+		if(ht->table[i] != 0){
+			hashLink* iter = ht->table[i];
+			int hashIndex = -1;
+			hashLink* newLink = NULL;
+			while(iter != 0){
+				if(HASHING_FUNCTION <= 1){
+					hashIndex = stringHash1(ht->table[i]->key) % ht->tableSize;	
+				}else{
+					hashIndex = stringHash2(ht->table[i]->key) % ht->tableSize;	
+				}
+				hashLink* newLink = (hashLink*)malloc(sizeof(hashLink));
+				assert(newLink != 0);	
+				newLink->value = iter->value;
+				newLink->next = newTable[hashIndex];
+				newTable[hashIndex] = newLink;
+				iter = iter->next;
+			}
+		}
+		deleteMap(ht);
+		ht->table = newTable;
+	}	
 }
 
 /*
