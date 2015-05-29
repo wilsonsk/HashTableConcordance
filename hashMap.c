@@ -19,6 +19,13 @@ int stringHash1(char * str)
 
 /*the second hashing function you can use*/
 /* RETURNS THE SUM OF ((index + 1) * ASCII decimalValue at char index i) OF EACH INDIVIDUAL CHAR OF THE CHAR LINKED LIST ARGUMENT*/
+/* THE VALUE OF INDEX SHIFTED, MULTIPLIED BY THE ASCII VALUE OF THE CHAR */
+/* CREATES MORE UNIQUE HASH INDEX WHICH CAN BE MOD'D TO VALUE INDEX */
+/* EXAMPLE: 
+	* i = 0 : 1 * ACSII
+	* i = 1 : 2 * ASCII
+	*...
+*/ 
 int stringHash2(char * str)
 {
 	int i;
@@ -58,6 +65,16 @@ hashMap *createMap(int tableSize) {
 void _freeMap (struct hashMap * ht)
 {  
 	/*write this*/		
+	
+	hashLink* tempIter = NULL;
+	for(int i = 0; i < ht->tableSize; i++){
+		while(ht->table[i] != NULL){
+			free(ht->table[i]->key);
+			tempIter = ht->table[i]->next;
+			free(ht->table[i]);	
+			ht->table[i] = tempIter;
+		}
+	}
 }
 
 /* Deallocate buckets and the hash map.*/
