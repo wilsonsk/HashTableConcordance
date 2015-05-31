@@ -45,9 +45,17 @@ int main (int argc, const char * argv[]) {
 		
 	fileptr = fopen(filename, "r");
 	if(fileptr != NULL){
-		char* word;
+		char* word = NULL;	
 		while((word = getWord(fileptr))){
-			printf("%s\n", word);	
+			/* printf("%s\n", word);	DEBUG CONTROL */
+			ValueType* tempValue = (ValueType*)malloc(sizeof(ValueType));
+			(*tempValue) = 1;
+			if(containsKey(hashTable, word) <= 0){
+				insertMap(hashTable, word, *tempValue);  
+			}else{
+				ValueType* temp = atMap(hashTable, word);
+				(*temp)++;	
+			}
 		}
 	}
 
