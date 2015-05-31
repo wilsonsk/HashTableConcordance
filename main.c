@@ -43,6 +43,14 @@ int main (int argc, const char * argv[]) {
 	
     /*... concordance code goes here ...*/
 		
+	fileptr = fopen(filename, "r");
+	if(fileptr != NULL){
+		char* word;
+		while((word = getWord(fileptr))){
+			printf("%s\n", word);	
+		}
+	}
+
 	/*... concordance code ends here ...*/
 
 	printMap(hashTable);

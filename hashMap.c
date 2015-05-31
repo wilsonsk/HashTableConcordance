@@ -94,7 +94,7 @@ void _setTableSize(struct hashMap * ht, int newTableSize)
 	/*write this*/			
 	assert(ht != 0);
 	ht->tableSize *= 2;
-	hashLink** newTable = (hashMap**)malloc(ht->tableSize * sizeof(hashLink*));
+	hashLink** newTable = (hashLink**)malloc(ht->tableSize * sizeof(hashLink*));
 	for(int i = 0; i < ht->tableSize; i++){ newTable[i] = NULL; }
 	for(int i = 0; i < ht->count; i++){
 		if(ht->table[i] != 0){
@@ -150,8 +150,7 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
 	newLink->next = ht->table[hashIndex];
 	ht->table[hashIndex] = newLink;
 	++ht->count;
-	double loadFactor = (ht->count / (double) ht->tableSize);
-	if(loadFactor > LOAD_FACTOR_THRESHOLD){ _setTableSize(ht, ht->tableSize); }
+	if(tableLoad(ht) > LOAD_FACTOR_THRESHOLD){ _setTableSize(ht, ht->tableSize); }
 		
 }
 
@@ -179,8 +178,8 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
 	iter = ht->table[hashIndex];
 	while(iter != 0){
 		if(iter->key == k){
-			ValueType temp = iter->value;
-			return temp;
+			ValueType* returnVal = &iter->value;
+			return returnVal;
 		}else{
 			iter = iter->next;
 		}
@@ -197,6 +196,27 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
 int containsKey (struct hashMap * ht, KeyType k)
 {  
 	/*write this*/
+
+	assert(ht != 0);
+	int hashIndex;
+	if(HASHING_FUNCTION <= 1){
+		hashIndex = stringHash1(k) % ht->tableSize;	
+	}else{
+		hashIndex = stringHash2(k) % ht->tableSize;	
+	}
+	if(hashIndex < 0){ hashIndex += ht->tableSize; }
+
+	hashLink* iter = (hashLink*)malloc(sizeof(hashLink));
+	iter = ht->table[hashIndex];
+	while(iter != 0){
+		if(iter->key == k){
+			return 1;
+		}else{
+			iter = iter->next;
+		}
+	}
+	
+
 	return 0;
 }
 
@@ -209,6 +229,29 @@ int containsKey (struct hashMap * ht, KeyType k)
 void removeKey (struct hashMap * ht, KeyType k)
 {  
 	/*write this*/	
+
+
+	assert(ht != 0);
+	int hashIndex;
+	if(HASHING_FUNCTION <= 1){
+		hashIndex = stringHash1(k) % ht->tableSize;	
+	}else{
+		hashIndex = stringHash2(k) % ht->tableSize;	
+	}
+	if(hashIndex < 0){ hashIndex += ht->tableSize; }
+
+	hashLink* iter = (hashLink*)malloc(sizeof(hashLink));
+	iter = ht->table[hashIndex];
+	while(iter != 0){
+		if(iter->key == k){
+			hashLink* tmp = iter;
+			iter = iter->next;
+			free(tmp);
+		}else{
+			iter = iter->next;
+		}
+	}
+
 }
 
 /*
@@ -217,7 +260,8 @@ void removeKey (struct hashMap * ht, KeyType k)
 int size (struct hashMap *ht)
 {  
 	/*write this*/
-	return 0;
+
+	return ht->count;
 	
 }
 
@@ -227,7 +271,8 @@ int size (struct hashMap *ht)
 int capacity(struct hashMap *ht)
 {  
 	/*write this*/
-	return 0;
+	
+	return ht->tableSize;
 }
 
 /*
@@ -237,7 +282,16 @@ int capacity(struct hashMap *ht)
 int emptyBuckets(struct hashMap *ht)
 {  
 	/*write this*/
-	return 0;
+	assert(ht != 0);
+	int counter = 0;
+	hashLink* iter = ht->table[0];
+	for(int i = 0; i < ht->tableSize; i++){
+		while(iter != 0){
+			++counter;
+			iter = iter->next;
+		}
+	}
+	return counter;
 }
 
 /*
@@ -250,7 +304,9 @@ int emptyBuckets(struct hashMap *ht)
 float tableLoad(struct hashMap *ht)
 {  
 	/*write this*/
-	return 0;
+
+	float loadFactor = (ht->count / (double) ht->tableSize);
+	return loadFactor;
 }
 void printMap (struct hashMap * ht)
 {
