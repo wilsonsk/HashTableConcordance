@@ -48,14 +48,8 @@ int main (int argc, const char * argv[]) {
 		char* word = NULL;	
 		while((word = getWord(fileptr))){
 			/* printf("%s\n", word);	DEBUG CONTROL */
-			ValueType starter = 1;
-			ValueType* firstValue = &starter;
-			if(containsKey(hashTable, word) <= 0){
-				insertMap(hashTable, word, *firstValue);  
-			}else{
-				ValueType* countValue = atMap(hashTable, word);
-				(*countValue)++;	
-			}
+			ValueType firstValue = 1;
+			insertMap(hashTable, word, firstValue);  
 		}
 	}
 

@@ -106,9 +106,7 @@ void _setTableSize(struct hashMap * ht, int newTableSize)
 			}while(iter != 0);
 		}
 	}	
-	hashMap* temp = ht;	
 	ht = newMap;
-	deleteMap(temp);
 }
 
 /*
@@ -145,8 +143,8 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
 		++ht->count;
 		if(tableLoad(ht) >= LOAD_FACTOR_THRESHOLD){ _setTableSize(ht, (ht->tableSize *= 2)); }
 	}else if(containsKey(ht, k) > 0){
-        	ValueType* temp = atMap(ht, k);
-        	(*temp)++;
+	        ValueType* value = atMap(ht, k);
+		(*value)++;
 	}
 }
 
@@ -205,13 +203,12 @@ int containsKey (struct hashMap * ht, KeyType k)
 	hashLink* iter = NULL;
 	iter = ht->table[hashIndex];
 	while(iter != 0){
-		if(strcmp(iter->key, k) == 0){
+		if(strcmp((KeyType)iter->key, (KeyType)k) == 0){
 			return 1;
 		}else{
 			iter = iter->next;
 		}
 	}
-	
 
 	return 0;
 }
@@ -241,7 +238,7 @@ if(containsKey(ht, k) == 1){
 	if(strcmp(iterHead->key, k) == 0){
 		hashLink* tmp = iterHead;
 		ht->table[hashIndex] = iterNext;
-		free(atMap(ht, tmp->key));
+		free(&(tmp->key));
 		free(tmp->key);
 		--ht->count;
 	}else{
@@ -249,7 +246,7 @@ if(containsKey(ht, k) == 1){
 			if(strcmp(iterNext->key, k) == 0){
 				hashLink* tmp = iterNext;
 				iterHead->next = iterNext->next;
-				free(atMap(ht, iterNext->key));
+				free(&(tmp->key));
 				free(tmp->key);
 				--ht->count;
 				break;
