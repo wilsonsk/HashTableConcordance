@@ -65,12 +65,17 @@ hashMap *createMap(int tableSize) {
 void _freeMap (struct hashMap * ht)
 {  
 	/*write this*/		
+	assert(ht != 0);
 	hashLink* iter = NULL;
+	hashLink* temp = NULL;
 	for(int i = 0; i < ht->tableSize; i++){
 		iter = ht->table[i];
 		while(iter != 0){	
 			removeKey(ht, iter->key);
+			temp = iter;
 			iter = iter->next;
+			free(temp);
+			temp = NULL;
 		}		
 	}
 }
@@ -167,9 +172,10 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
 
 	hashLink* iter = NULL;
 	iter = ht->table[hashIndex];
+	ValueType* temp = NULL;
 	while(iter != 0){
 		if(iter->key == k){
-			return (ValueType*)iter->value;
+			return temp = &iter->value;
 		}else{
 			iter = iter->next;
 		}
@@ -220,7 +226,7 @@ void removeKey (struct hashMap * ht, KeyType k)
 {  
 	/*write this*/	
 
-
+if(containsKey(ht, k) == 1){
 	assert(ht != 0);
 	int hashIndex;
 	if(HASHING_FUNCTION <= 1){
@@ -237,8 +243,6 @@ void removeKey (struct hashMap * ht, KeyType k)
 		ht->table[hashIndex] = iterNext;
 		free(atMap(ht, tmp->key));
 		free(tmp->key);
-		free(tmp);
-		tmp = NULL;
 		--ht->count;
 	}else{
 		do{
@@ -247,8 +251,6 @@ void removeKey (struct hashMap * ht, KeyType k)
 				iterHead->next = iterNext->next;
 				free(atMap(ht, iterNext->key));
 				free(tmp->key);
-				free(tmp);
-				tmp = NULL;
 				--ht->count;
 				break;
 			}		
@@ -256,6 +258,7 @@ void removeKey (struct hashMap * ht, KeyType k)
 			iterNext = iterNext->next;
 		}while(iterNext != 0);
 	}
+}
 }
 
 /*
@@ -301,7 +304,7 @@ float tableLoad(struct hashMap *ht)
 {  
 	/*write this*/
 
-	float loadFactor = (ht->count / (double) ht->tableSize);
+	float loadFactor = (ht->count / (float) ht->tableSize);
 	return loadFactor;
 }
 void printMap (struct hashMap * ht)
