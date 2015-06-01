@@ -142,9 +142,6 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
 		ht->table[hashIndex] = newLink;
 		++ht->count;
 		if(tableLoad(ht) >= LOAD_FACTOR_THRESHOLD){ _setTableSize(ht, (ht->tableSize *= 2)); }
-	}else if(containsKey(ht, k) > 0){
-	        ValueType* value = atMap(ht, k);
-		(*value)++;
 	}
 }
 
@@ -172,7 +169,7 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
 	iter = ht->table[hashIndex];
 	ValueType* temp = NULL;
 	while(iter != 0){
-		if(iter->key == k){
+		if(strcmp((KeyType)iter->key, (KeyType)k) == 0){
 			return temp = &iter->value;
 		}else{
 			iter = iter->next;

@@ -45,14 +45,19 @@ int main (int argc, const char * argv[]) {
 		
 	fileptr = fopen(filename, "r");
 	if(fileptr != NULL){
-		char* word = NULL;	
-		while((word = getWord(fileptr))){
+		char* word = getWord(fileptr);
+		while(word != 0){
 			/* printf("%s\n", word);	DEBUG CONTROL */
 			ValueType firstValue = 1;
-			insertMap(hashTable, word, firstValue);  
+			ValueType* value = atMap(hashTable, word);
+			if(*value != 0){
+				(*value)++;
+			}else{
+				insertMap(hashTable, word, firstValue);  
+			}
+			word = getWord(fileptr);
 		}
 	}
-
 	/*... concordance code ends here ...*/
 
 	printMap(hashTable);
