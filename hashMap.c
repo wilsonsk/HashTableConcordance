@@ -205,7 +205,7 @@ int containsKey (struct hashMap * ht, KeyType k)
 	hashLink* iter = NULL;
 	iter = ht->table[hashIndex];
 	while(iter != 0){
-		if(iter->key == k){
+		if(strcmp(iter->key, k) == 0){
 			return 1;
 		}else{
 			iter = iter->next;
