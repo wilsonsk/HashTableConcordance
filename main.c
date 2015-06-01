@@ -48,13 +48,13 @@ int main (int argc, const char * argv[]) {
 		char* word = NULL;	
 		while((word = getWord(fileptr))){
 			/* printf("%s\n", word);	DEBUG CONTROL */
-			ValueType* tempValue = (ValueType*)malloc(sizeof(ValueType));
-			(*tempValue) = 1;
+			ValueType starter = 1;
+			ValueType* firstValue = &starter;
 			if(containsKey(hashTable, word) <= 0){
-				insertMap(hashTable, word, *tempValue);  
+				insertMap(hashTable, word, *firstValue);  
 			}else{
-				ValueType* temp = atMap(hashTable, word);
-				(*temp)++;	
+				ValueType* countValue = atMap(hashTable, word);
+				(*countValue)++;	
 			}
 		}
 	}
