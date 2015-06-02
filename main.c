@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include "hashMap.h"
 
@@ -42,22 +43,27 @@ int main (int argc, const char * argv[]) {
 	hashTable = createMap(tableSize);	   
 	
     /*... concordance code goes here ...*/
-		
-	fileptr = fopen(filename, "r");
-	if(fileptr != NULL){
-		char* word = getWord(fileptr);
-		while(word != 0){
-			/* printf("%s\n", word);	DEBUG CONTROL */
-			ValueType firstValue = 1;
-			ValueType* value = atMap(hashTable, word);
-			if(*value != 0){
-				(*value)++;
-			}else{
-				insertMap(hashTable, word, firstValue);  
-			}
-			word = getWord(fileptr);
-		}
-	}
+
+
+        fileptr = fopen(filename, "r");
+        if(fileptr != NULL){
+                char* word = getWord(fileptr);
+                while(word != 0){
+
+                    KeyType tempKey = malloc(strlen(word + 1));
+
+
+                    tempKey = strncpy(tempKey, word, sizeof(word + 1));
+                    ValueType firstValue = 1;
+
+                    insertMap(hashTable, tempKey, firstValue);
+
+                    word = getWord(fileptr);
+                }
+        }
+
+
+        
 	/*... concordance code ends here ...*/
 
 	printMap(hashTable);
@@ -67,7 +73,7 @@ int main (int argc, const char * argv[]) {
     printf("Table count = %d\n", size(hashTable));
 	printf("Table capacity = %d\n", capacity(hashTable));
 	printf("Table load = %f\n", tableLoad(hashTable));
-	
+/*	
 	printf("Deleting keys\n");
 	
 	removeKey(hashTable, "and");
@@ -77,7 +83,7 @@ int main (int argc, const char * argv[]) {
 		
 	deleteMap(hashTable);
 	printf("\nDeleted the table\n");   
-	return 0;
+*/	return 0;
 }
 
 void printValue(ValueType v) {
