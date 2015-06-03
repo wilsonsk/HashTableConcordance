@@ -105,7 +105,7 @@ void _setTableSize(struct hashMap * ht, int newTableSize)
         for(int i = 0; i < newTableSize; i++){ ht->table[i] = NULL; }
         ht->count = 0;
         ht->tableSize = newTableSize;
-        for(int i=0; i<oldHTCount; i++){
+        for(int i=0; i< (ht->tableSize - emptyBuckets(ht)); i++){
                 if(ht->table[i]){
                     hashLink* iter = oldHTTable[i];
                     do{    //rehash all links
@@ -330,7 +330,13 @@ int emptyBuckets(struct hashMap *ht)
 {
 	/*write this*/
 	assert(ht != 0);
-	return (ht->tableSize - ht->count);
+	int numEmptyBuckets= 0;
+	for(int i = 0; i < ht->tableSize; i++){
+		if(ht->table[i] == 0){
+			++numEmptyBuckets;
+		}
+	}
+	return numEmptyBuckets;
 }
 
 /*
