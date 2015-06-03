@@ -49,15 +49,10 @@ int main (int argc, const char * argv[]) {
         if(fileptr != NULL){
                 char* word = getWord(fileptr);
                 while(word != 0){
-
                     KeyType tempKey = malloc(strlen(word + 1));
-
-
                     tempKey = strncpy(tempKey, word, sizeof(word + 1));
                     ValueType firstValue = 1;
-
                     insertMap(hashTable, tempKey, firstValue);
-
                     word = getWord(fileptr);
                 }
         }
@@ -70,7 +65,7 @@ int main (int argc, const char * argv[]) {
 	timer = clock() - timer;
 	printf("\nconcordance ran in %f seconds\n", (float)timer / (float)CLOCKS_PER_SEC);
 	printf("Table emptyBuckets = %d\n", emptyBuckets(hashTable));
-    printf("Table count = %d\n", size(hashTable));
+    	printf("Table count = %d\n", size(hashTable));
 	printf("Table capacity = %d\n", capacity(hashTable));
 	printf("Table load = %f\n", tableLoad(hashTable));
 	

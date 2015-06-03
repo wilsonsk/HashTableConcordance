@@ -132,7 +132,7 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
         assert(ht != 0);
           if(containsKey(ht, k) <= 0){
                 printf("INSERTING NEW KEY\n");
-              int hashIndex;
+              	int hashIndex;
                 if(HASHING_FUNCTION <= 1){
                         hashIndex = stringHash1(k) % ht->tableSize;
                 }else{
@@ -153,34 +153,33 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
                 ht->table[hashIndex] = newLink;
                 ++ht->count;
                 if(newLink->key != 0){
-                    printf("KEY NOT INITIALIZED\n");
-                     printf("newLink->key == %s\n", newLink->key);
-        printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
-    printf("Table count = %d\n", size(ht));
-        printf("Table capacity = %d\n", capacity(ht));
-        printf("Table load = %f\n", tableLoad(ht));
+                	printf("KEY NOT INITIALIZED\n");
+                	printf("newLink->key == %s\n", newLink->key);
+        		printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
+    			printf("Table count = %d\n", size(ht));
+        		printf("Table capacity = %d\n", capacity(ht));
+        		printf("Table load = %f\n", tableLoad(ht));
                 }else{
-
-                    printf("newLink->key == %s\n", newLink->key);
-        printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
-    printf("Table count = %d\n", size(ht));
-        printf("Table capacity = %d\n", capacity(ht));
-        printf("Table load = %f\n", tableLoad(ht));
+                    	printf("newLink->key == %s\n", newLink->key);
+        		printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
+    			printf("Table count = %d\n", size(ht));
+        		printf("Table capacity = %d\n", capacity(ht));
+        		printf("Table load = %f\n", tableLoad(ht));
                 }
 
              if(tableLoad(ht) >= LOAD_FACTOR_THRESHOLD){ _setTableSize(ht, (ht->tableSize *= 2)); }
-          }else if(containsKey(ht, k) > 0){
-              printf("DUPLICATE KEY: INCREMENTING VALUE\n");
-                          ValueType* tempVal = atMap(ht, k);
-                ++*tempVal;
-                              printf("newLink->value = %d\n", *atMap(ht, k));
-                                printf("newLink->key == %s\n", k);
-                      printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
-    printf("Table count = %d\n", size(ht));
-        printf("Table capacity = %d\n", capacity(ht));
-        printf("Table load = %f\n", tableLoad(ht));
-
-          }
+          
+	}else if(containsKey(ht, k) > 0){
+              		printf("DUPLICATE KEY: INCREMENTING VALUE\n");
+                        ValueType* tempVal = atMap(ht, k);
+                	++*tempVal;
+                        printf("newLink->value = %d\n", *atMap(ht, k));
+                        printf("newLink->key == %s\n", k);
+                      	printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
+    			printf("Table count = %d\n", size(ht));
+        		printf("Table capacity = %d\n", capacity(ht));
+        		printf("Table load = %f\n", tableLoad(ht));
+	}
 }
 
 /*
@@ -193,7 +192,7 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
 {
 	/*write this*/
 	        /*write this*/
-       assert(ht != 0);
+       	assert(ht != 0);
         int hashIndex;
         if(HASHING_FUNCTION <= 1){
                 hashIndex = stringHash1(k) % ht->tableSize;
@@ -206,17 +205,14 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
         iter = ht->table[hashIndex];
         ValueType* temp = NULL;
         while(iter != 0){
-                        if(strncmp((KeyType)iter->key, (KeyType)k, sizeof(k + 1)) == 0){
-                                return temp = &iter->value;
-                        }else{
-                                iter = iter->next;
-                        }
-
-        }
+       		if(strncmp((KeyType)iter->key, (KeyType)k, sizeof(k + 1)) == 0){
+                	return temp = &iter->value;
+                }else{
+                        iter = iter->next;
+                }
+	}
 
         return NULL;
-
-
 }
 
 
@@ -239,16 +235,13 @@ int containsKey (struct hashMap * ht, KeyType k)
         hashLink* iter = NULL;
         iter = ht->table[hashIndex];
         while(iter != 0){
-
-                        if(strncmp((KeyType)iter->key, (KeyType)k, sizeof(k + 1)) == 0){
-                                return 1;
-                        }else{
-                                iter = iter->next;
-                        }
-
+		if(strncmp((KeyType)iter->key, (KeyType)k, sizeof(k + 1)) == 0){
+               		return 1;
+                }else{
+                        iter = iter->next;
+                }
         }
         return 0;
-
 }
 
 /*
@@ -260,39 +253,37 @@ int containsKey (struct hashMap * ht, KeyType k)
 void removeKey (struct hashMap * ht, KeyType k)
 {
 	/*write this*/
-    if(containsKey(ht, k) == 1){
-            assert(ht != 0);
-            int hashIndex;
-            if(HASHING_FUNCTION <= 1){
-                    hashIndex = stringHash1(k) % ht->tableSize;
-            }else{
-                    hashIndex = stringHash2(k) % ht->tableSize;
-            }
-            if(hashIndex < 0){ hashIndex += ht->tableSize; }
+    	if(containsKey(ht, k) == 1){
+        	assert(ht != 0);
+        	int hashIndex;
+            	if(HASHING_FUNCTION <= 1){
+                	hashIndex = stringHash1(k) % ht->tableSize;
+            	}else{
+                	hashIndex = stringHash2(k) % ht->tableSize;
+            	}
+            	if(hashIndex < 0){ hashIndex += ht->tableSize; }
 
-            hashLink* iterHead = ht->table[hashIndex];
-            hashLink* iterNext = ht->table[hashIndex]->next;
-            if(strncmp(iterHead->key, k, sizeof(k + 1)) == 0){
-                    hashLink* tmp = iterHead;
-                    ht->table[hashIndex] = iterNext;
-                    free(tmp->key);
-                    --ht->count;
-            }else{
-                    do{
-                            if(strncmp(iterNext->key, k, sizeof(k + 1)) == 0){
-                                    hashLink* tmp = iterNext;
-                                    iterHead->next = iterNext->next;
-                                    free(tmp->key);
-                                    --ht->count;
-                                    break;
-                            }
-                            iterHead = iterHead->next;
-                            iterNext = iterNext->next;
-                    }while(iterNext != 0);
-            }
-    }
-
-
+            	hashLink* iterHead = ht->table[hashIndex];
+            	hashLink* iterNext = ht->table[hashIndex]->next;
+            	if(strncmp(iterHead->key, k, sizeof(k + 1)) == 0){
+                	hashLink* tmp = iterHead;
+                    	ht->table[hashIndex] = iterNext;
+                    	free(tmp->key);
+                    	--ht->count;
+            	}else{
+                	do{
+                        	if(strncmp(iterNext->key, k, sizeof(k + 1)) == 0){
+                                	hashLink* tmp = iterNext;
+                                    	iterHead->next = iterNext->next;
+                                    	free(tmp->key);
+                                    	--ht->count;
+                                    	break;
+                            	}
+                            	iterHead = iterHead->next;
+                            	iterNext = iterNext->next;
+                    	}while(iterNext != 0);
+            	}
+    	}
 }
 /*
  returns the number of hashLinks in the table
