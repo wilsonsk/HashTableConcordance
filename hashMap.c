@@ -272,10 +272,9 @@ void removeKey (struct hashMap * ht, KeyType k)
 
             hashLink* iterHead = ht->table[hashIndex];
             hashLink* iterNext = ht->table[hashIndex]->next;
-            if(strncmp(iterHead->key, k, sizeof(k)) == 0){
+            if(strncmp(iterHead->key, k, sizeof(k + 1)) == 0){
                     hashLink* tmp = iterHead;
                     ht->table[hashIndex] = iterNext;
-                    free(&(tmp->value));
                     free(tmp->key);
                     --ht->count;
             }else{
@@ -283,7 +282,6 @@ void removeKey (struct hashMap * ht, KeyType k)
                             if(strncmp(iterNext->key, k, sizeof(k + 1)) == 0){
                                     hashLink* tmp = iterNext;
                                     iterHead->next = iterNext->next;
-                                    free(&(tmp->value));
                                     free(tmp->key);
                                     --ht->count;
                                     break;
