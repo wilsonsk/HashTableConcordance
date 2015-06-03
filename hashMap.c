@@ -98,8 +98,6 @@ void _setTableSize(struct hashMap * ht, int newTableSize)
 	/*write this*/
         printf("\n\nRESIZING\n\n");
         assert(ht);
-        printf("NewTableSize == %d\n\n", newTableSize);
-        int oldHTCount = ht->count;
         hashLink** oldHTTable = ht->table;
         ht->table = (hashLink**)malloc(sizeof(hashLink*) * newTableSize);
         for(int i = 0; i < newTableSize; i++){ ht->table[i] = NULL; }
@@ -115,21 +113,16 @@ void _setTableSize(struct hashMap * ht, int newTableSize)
                 }
         }
         free(oldHTTable);
-    printf("\nNEW TABLE SET\n");
-    printf("newTable COUNT == %d\n\n", ht->count);
-    printf("newTable TABLE SIZE == %d\n\n", ht->tableSize);
-
+        printMap(ht);
 }
 
 /*
  insert the following values into a hashLink, you must create this hashLink but
  only after you confirm that this key does not already exist in the table. For example, you
  cannot have two hashLinks for the word "taco".
-
  if a hashLink already exists in the table for the key provided you should
  replace that hashLink--this requires freeing up the old memory pointed by hashLink->value
  and then pointing hashLink->value to value v.
-
  also, you must monitor the load factor and resize when the load factor is greater than
  or equal LOAD_FACTOR_THRESHOLD (defined in hashMap.h).
  */
@@ -151,7 +144,6 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
                 newLink = (hashLink*)malloc(sizeof(hashLink));
 
                 assert(newLink != 0);
-                printf("value == %d\n", v);
                 printf("k == %s\n", k);
 
                 newLink->next = ht->table[hashIndex];
@@ -159,37 +151,42 @@ void insertMap (struct hashMap * ht, KeyType k, ValueType v)
                 newLink->value = v;
                 printf("newLink->value = %d\n", newLink->value);
                 ht->table[hashIndex] = newLink;
+                ++ht->count;
                 if(newLink->key != 0){
                     printf("KEY NOT INITIALIZED\n");
                      printf("newLink->key == %s\n", newLink->key);
+        printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
+    printf("Table count = %d\n", size(ht));
+        printf("Table capacity = %d\n", capacity(ht));
+        printf("Table load = %f\n", tableLoad(ht));
                 }else{
 
                     printf("newLink->key == %s\n", newLink->key);
+        printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
+    printf("Table count = %d\n", size(ht));
+        printf("Table capacity = %d\n", capacity(ht));
+        printf("Table load = %f\n", tableLoad(ht));
                 }
-                ++ht->count;
-                printf("count == %d\n", ht->count);
 
              if(tableLoad(ht) >= LOAD_FACTOR_THRESHOLD){ _setTableSize(ht, (ht->tableSize *= 2)); }
           }else if(containsKey(ht, k) > 0){
               printf("DUPLICATE KEY: INCREMENTING VALUE\n");
-                printf("k == %s\n", k);
-                printf("CALLING atMap()\n");
-                ValueType* tempVal = atMap(ht, k);
-                printf("tempVal == %d\n", *tempVal);
+                          ValueType* tempVal = atMap(ht, k);
                 ++*tempVal;
-                printf("value++ == %d\n", *atMap(ht, k));
-                printf("count == %d\n", ht->count);
-
+                              printf("newLink->value = %d\n", *atMap(ht, k));
+                                printf("newLink->key == %s\n", k);
+                      printf("Table emptyBuckets = %d\n", emptyBuckets(ht));
+    printf("Table count = %d\n", size(ht));
+        printf("Table capacity = %d\n", capacity(ht));
+        printf("Table load = %f\n", tableLoad(ht));
 
           }
 }
 
 /*
  this returns the value (which is void*) stored in a hashLink specified by the key k.
-
  if the user supplies the key "taco" you should find taco in the hashTable, then
  return the value member of the hashLink that represents taco.
-
  if the supplied key is not in the hashtable return NULL.
  */
 ValueType* atMap (struct hashMap * ht, KeyType k)
@@ -209,9 +206,7 @@ ValueType* atMap (struct hashMap * ht, KeyType k)
         iter = ht->table[hashIndex];
         ValueType* temp = NULL;
         while(iter != 0){
-                printf("atMap: iter->key: %s\n", iter->key);
                         if(strncmp((KeyType)iter->key, (KeyType)k, sizeof(k + 1)) == 0){
-                                printf("KEY FOUND: iter->value == %d \n", iter->value);
                                 return temp = &iter->value;
                         }else{
                                 iter = iter->next;
@@ -333,7 +328,7 @@ int emptyBuckets(struct hashMap *ht)
 	int numEmptyBuckets= 0;
 	for(int i = 0; i < ht->tableSize; i++){
 		if(ht->table[i] == 0){
-			++numEmptyBuckets;
+			numEmptyBuckets++;
 		}
 	}
 	return numEmptyBuckets;
@@ -341,7 +336,6 @@ int emptyBuckets(struct hashMap *ht)
 
 /*
  returns the ratio of: (number of hashlinks) / (number of buckets)
-
  this value can range anywhere from zero (an empty table) to more then 1, which
  would mean that there are more hashlinks then buckets (but remember hashlinks
  are like linked list nodes so they can hang from each other)

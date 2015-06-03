@@ -73,7 +73,7 @@ int main (int argc, const char * argv[]) {
     printf("Table count = %d\n", size(hashTable));
 	printf("Table capacity = %d\n", capacity(hashTable));
 	printf("Table load = %f\n", tableLoad(hashTable));
-/*	
+	
 	printf("Deleting keys\n");
 	
 	removeKey(hashTable, "and");
@@ -83,7 +83,7 @@ int main (int argc, const char * argv[]) {
 		
 	deleteMap(hashTable);
 	printf("\nDeleted the table\n");   
-*/	return 0;
+return 0;
 }
 
 void printValue(ValueType v) {
